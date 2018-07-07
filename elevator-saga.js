@@ -8,9 +8,10 @@
 		elevator = params["elevator"] || {},
 		insideService = params["insideService"] || false,
 		addFloorNum = params["addFloorNum"] || 0,
-		intercepting = false;
+		intercepting = false,
+		direction = elevator.destinationDirection();
 
-	    if("down" == elevator.dir()){
+	    if("down" == direction){
 		intercepting = elevator.currentFloor() >= addFloorNum;
 	    } else {
 		intercepting = elevator.currentFloor() <= addFloorNum;
@@ -24,7 +25,7 @@
                 return !pos || item != ary[pos - 1];
             });
 	    
-            if("down" == elevator.dir()) {
+            if("down" == direction) {
                 elevator.destinationQueue.reverse();
             }
 
@@ -43,12 +44,12 @@
 	    elevator.checkDestionationQueue();
         }
 	, findIntercepting = function (params) {
-	    var elevator = params["elevator"] || {},
+	    var elevators = params["elevators"] || {},
 		floorNum = params["floorNum"];
 	    
             if (floorNum) {
 		for (let current of elevators) {
-		    if(("down" == current.dir && current.currentFloor() >= floorNum) or ("up" == current.dir && current.currentFloor() <= floorNum)) {
+		    if(("down" == current.destinationDirection() && current.currentFloor() >= floorNum) or ("up" == current.destinationDirection() && current.currentFloor() <= floorNum)) {
 			return current;
 		    }
 		}
@@ -79,7 +80,7 @@
                     this.goToFloor(0);
 		}).on("floor_button_pressed", function (floorNum) {
                     go(this, floorNum, true);
-		}).on("stopped_at_floor", function () {
+		});/*.on("stopped_at_floor", function () {
 		    var nextFloor = this.destinationQueue[0],
 			currentFloor = this.currentFloor,
 			dir = "stopped";
@@ -93,7 +94,7 @@
 		    }
 
 		    this.dir = dir;
-		});
+		});*/
         }
 	
         //init floors
